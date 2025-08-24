@@ -31,6 +31,10 @@
     const removeTask = (todoId) => {
         todoList.value = todoList.value.filter((todo) => todo.id !== todoId)
     }
+
+    const todoTaskCount = computed(() => {
+        return todoList.value.filter((todo) => todo.completed === false).length
+    })
 </script>
 
 <template>
@@ -41,15 +45,21 @@
         <button :disabled="taskName.length === 0">Create</button>
     </form>
 
-    <div>
-        <input id="toggleState" type="checkbox" v-model="hideCompleted">
-        <label for="toggleState">
+    <div class="toggleState">
+        <label>
+            <input type="checkbox" v-model="hideCompleted">
             {{ hideCompleted? 'Show all tasks' : 'Hide completed tasks' }}
         </label>
     </div>
 
-    <div v-if="sortedAndFilteredTask.length === 0">No task created...</div>
+    <div v-if="sortedAndFilteredTask.length === 0">No task to do...✨</div>
     <div v-else>
+        <p v-if="todoTaskCount > 0">
+            {{ todoTaskCount }} Task{{ todoTaskCount > 1 ? 's' : '' }} to do ⚡️
+        </p>
+        <p v-else>
+            All tasks done ✨
+        </p>
         <ul>
             <li v-for="todo in sortedAndFilteredTask" :key="todo.id">
                 <input type="checkbox" v-model="todo.completed">
@@ -64,8 +74,12 @@
     .completed {
         text-decoration: line-through;
     }
-    
-    .pointer {
-        cursor: pointer;
+
+    .toggleState {
+        margin: 16px 0px;
+    }
+
+    input[type='checkbox'] {
+        margin-left: 0;
     }
 </style>
