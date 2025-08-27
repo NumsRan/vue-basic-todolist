@@ -1,6 +1,9 @@
 <script setup>
     import { computed, ref } from 'vue'
 
+    import Checkbox from './components/Checkbox.vue'
+    import Button from './components/Button.vue'
+
     let id = 0
 
     const taskName = ref('')
@@ -42,14 +45,17 @@
 
     <form @submit.prevent="createTask">
         <input type="text" placeholder="New task to do" v-model="taskName" required>
-        <button :disabled="taskName.length === 0">Create</button>
+        <Button 
+            btnTitle="Create" 
+            :disabled="taskName.length === 0"
+        />
     </form>
 
     <div class="toggleState">
-        <label>
-            <input type="checkbox" v-model="hideCompleted">
-            {{ hideCompleted? 'Show all tasks' : 'Hide completed tasks' }}
-        </label>
+        <Checkbox
+            :todoTitle="hideCompleted? 'Show all tasks' : 'Hide completed tasks'"
+            v-model="hideCompleted"
+        />
     </div>
 
     <div v-if="sortedAndFilteredTask.length === 0">No task to do...✨</div>
@@ -62,19 +68,23 @@
         </p>
         <ul>
             <li v-for="todo in sortedAndFilteredTask" :key="todo.id">
-                <input type="checkbox" v-model="todo.completed">
-                <span :class="{completed: todo.completed}">{{ todo.title }}</span>
-                <button @click="removeTask(todo.id)">Delete</button>
+                <Checkbox 
+                    :todoTitle="todo.title" 
+                    :todoState="todo.completed" 
+                    @check="(p) => console.log('checked', p)" 
+                    @uncheck="console.log('unchecked')"
+                    v-model="todo.completed"
+                />
+                <Button
+                    btnTitle="Delete"
+                    @delete="removeTask(todo.id)"
+                />
             </li>
         </ul>
     </div>
 </template>
 
 <style scoped>
-    .completed {
-        text-decoration: line-through;
-    }
-
     .toggleState {
         margin: 16px 0px;
     }
