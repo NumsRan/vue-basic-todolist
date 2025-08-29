@@ -29,4 +29,12 @@
     .completed {
         text-decoration: line-through;
     }
+
+    input[type='checkbox'] {
+        margin-left: 0;
+    }
+
+    span {
+        margin: 0 4px 0  3px
+    }
 </style>
