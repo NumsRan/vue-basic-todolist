@@ -1,40 +1,44 @@
 <script setup>
+    import Timer from './Timer.vue'
+    import Button from './Button.vue'
+    import { ref } from 'vue'
+
     defineProps({
         todoTitle: String,
-        todoState: Boolean
+        isCompleted: Boolean,
+        checkboxId: String,
+        isTodoItem: Boolean
     })
 
-    const emits = defineEmits(['check', 'uncheck'])
-
-    const onChange = (event) => {
-        if(event.currentTarget.checked) {
-            emits('check', event.currentTarget)
-        }
-        else {
-            emits('uncheck', event.currentTarget)
-        }
-    }
+    const startTimer = ref(false)
 
     const model = defineModel()
 </script>
  
 <template>
-    <label>
-        <input type="checkbox" @change="onChange" v-model="model">
-        <span :class="{completed: todoState}">{{ todoTitle }}</span>
-    </label>
+    <div v-if="isTodoItem" class="d-flex w-100">
+        <input type="checkbox" class="form-check-input me-1" :id="checkboxId" v-model="model">
+        <label :for="checkboxId" class="form-check-label">
+            <span :class="{completed: isCompleted}">{{ todoTitle }}</span>
+        </label>
+        <Timer :isStarted="startTimer" :isCompleted="isCompleted" class="ms-auto me-2"/>
+        <Button
+            :class="startTimer? 'btn btn-danger btn-sm me-2' : 'btn btn-success btn-sm me-2'"
+            :btnClass="startTimer? 'bi bi-stop-circle' : 'bi bi-skip-start-circle-fill'"
+            :disabled="isCompleted"
+            @click="startTimer = !startTimer"
+        />
+    </div>
+    <div v-else>
+        <input type="checkbox" class="form-check-input me-1" :id="checkboxId" v-model="model">
+        <label :for="checkboxId" class="form-check-label">
+            <span :class="{completed: isCompleted}">{{ todoTitle }}</span>
+        </label>
+    </div>
 </template>
 
 <style scoped>
     .completed {
         text-decoration: line-through;
-    }
-
-    input[type='checkbox'] {
-        margin-left: 0;
-    }
-
-    span {
-        margin: 0 4px 0  3px
     }
 </style>

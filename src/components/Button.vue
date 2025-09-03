@@ -1,6 +1,6 @@
 <script setup>
     defineProps({
-        btnTitle: String
+        btnClass: String
     })
 
     const emits = defineEmits(['delete'])
@@ -10,5 +10,7 @@
 </script>
 
 <template>
-    <button @click="onClick">{{ btnTitle }}</button>
+    <button @click="onClick">
+        <i :class="btnClass"></i>
+    </button>
 </template>

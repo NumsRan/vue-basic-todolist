@@ -1,13 +1,16 @@
 <script setup>
-    import { useTimer } from '@/composable/useTimer';
-    import Button from './Button.vue';
+    import { useTimer } from '@/composable/useTimer'
 
-    const {time, reset} = useTimer()
+    const props = defineProps({
+        isStarted: Boolean,
+        isCompleted: Boolean
+    })
+
+    const { time } = useTimer(props)
 </script>
 
 <template>
     <div ref="div">
-        Mounted sense : {{ time }} second{{ time > 1 ? 's' : '' }}
+        {{ time }} s
     </div>
-    <Button btnTitle="Reset timer" @click="reset"/>
 </template>

@@ -1,31 +1,33 @@
-import { onMounted, onUnmounted, ref } from 'vue'
+import { ref, watch } from 'vue'
 
-export function useTimer(initial = 0) {
-    const time = ref(initial)
+export function useTimer(props) {
+    const time = ref(0)
+    let timer = null
 
-    let timer
+    watch(
+        () => ({ started: props.isStarted, completed: props.isCompleted }),
+        (newState) => {
+            if (newState.started) {
+                console.log('Timer started...')
+                if (!timer) {
+                    timer = setInterval(() => {
+                        time.value++
+                    }, 1000)
+                }
+            } else {
+                console.log('Timer stopped...')
+                clearInterval(timer)
+                timer = null
+            }
 
-    onMounted(() => {
-        timer = setInterval(() => {
-            console.log('Mounted...')
-            time.value++
-        }, 1000)
-    })
+            if (newState.completed) {
+                console.log('Task completed...')
+                clearInterval(timer)
+                timer = null
+            }
+        },
+        { immediate: true }
+    )
 
-    onUnmounted(() => {
-        console.log('Unmounted...')
-        clearInterval(timer)
-    })
-
-    return {
-        time,
-        reset() {
-            clearInterval(timer)
-            timer = setInterval(() => {
-                console.log('Mounted...')
-                time.value++
-            }, 1000)
-            time.value = 0
-        }
-    }
+    return { time }
 }

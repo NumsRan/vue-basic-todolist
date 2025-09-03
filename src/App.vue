@@ -3,7 +3,6 @@
 
     import Checkbox from './components/Checkbox.vue'
     import Button from './components/Button.vue'
-    import Timer from './components/Timer.vue'
 
     let id = 0
 
@@ -13,8 +12,6 @@
 
     const hideCompleted = ref(false)
 
-    const showTimer = ref(true)
-
     const container = ref(null)
 
     const containerSize = ref({width: 0, height: 0})
@@ -23,12 +20,17 @@
 
     // TODO APP FUNCTION
     const createTask = () => {
-        todoList.value.push({
-            id: id++,
-            title: taskName.value,
-            completed: false,
-            date: Date.now()
-        })
+        if(taskName.value.trim().length === 0) {
+            console.log('espace')
+        }
+        else {
+            todoList.value.push({
+                id: id++,
+                title: taskName.value,
+                completed: false,
+                date: Date.now()
+            })
+        }
         
         taskName.value = ''
     }
@@ -51,7 +53,7 @@
     onMounted(() => {
         getRect = setInterval(() => {
             const Rect = container.value.getBoundingClientRect()
-            containerSize.value = {width: Rect.width, height: Rect.height}
+            containerSize.value = {width: Math.round(Rect.width), height: Math.round(Rect.height)}
         }, 0)
     })
 
@@ -62,50 +64,52 @@
 </script>
 
 <template>
-    <div class="container" ref="container">
-        <h1>TODO LIST APP</h1>
+    <section class="container py-3" ref="container">
+        <h1>BASIC TODO LIST APP</h1>
     
-        <Timer v-if="showTimer"/>
-        <Button
-            :btnTitle="showTimer? 'Hide timer' : 'Show timer'"
-            @click="showTimer = !showTimer"
-            class="mb-16"
-        />
-    
-        <form @submit.prevent="createTask">
-            <input type="text" placeholder="New task to do" v-model="taskName" required>
+        <form class="d-flex my-2" @submit.prevent="createTask">
+            <input type="text" placeholder="New task to do" class="form-control me-3" v-model="taskName" required>
             <Button 
-                btnTitle="Create" 
+                class="btn btn-primary"
+                btnClass="bi bi-plus-square" 
                 :disabled="taskName.length === 0"
             />
         </form>
     
-        <div class="toggleState">
+        <div>
             <Checkbox
+                checkboxId="hideCompleted"
                 :todoTitle="hideCompleted? 'Show all tasks' : 'Hide completed tasks'"
+                :isTodoItem="false"
                 v-model="hideCompleted"
             />
         </div>
     
-        <div v-if="sortedAndFilteredTask.length === 0">No task to do...✨</div>
+        <div v-if="sortedAndFilteredTask.length === 0" class="alert alert-secondary my-2">
+            <i class="bi bi-list-task"></i>
+            No task to do...✨
+        </div>
         <div v-else>
-            <p v-if="todoTaskCount > 0">
+            <div v-if="todoTaskCount > 0" class="alert alert-info my-2">
+                <i class="bi bi-list-task"></i>
                 {{ todoTaskCount }} Task{{ todoTaskCount > 1 ? 's' : '' }} to do ⚡️
-            </p>
-            <p v-else>
+            </div>
+            <div v-else class="alert alert-success my-2">
+                <i class="bi bi-check-square-fill"></i>
                 All tasks done ✨
-            </p>
-            <ul>
-                <li v-for="todo in sortedAndFilteredTask" :key="todo.id">
+            </div>
+            <ul class="px-0">
+                <li v-for="todo in sortedAndFilteredTask" :key="todo.id" class="list-group-item list-group-item-action d-flex align-items-center my-2">
                     <Checkbox 
+                        :isTodoItem="true"
+                        :checkboxId="todo.id.toString()"
                         :todoTitle="todo.title" 
-                        :todoState="todo.completed" 
-                        @check="(p) => console.log('checked', p)" 
-                        @uncheck="(p) => console.log('unchecked', p)"
+                        :isCompleted="todo.completed"
                         v-model="todo.completed"
                     />
                     <Button
-                        btnTitle="Delete"
+                        class="btn btn-danger btn-sm ms-auto"
+                        btnClass="bi bi-trash-fill"
                         @delete="removeTask(todo.id)"
                     />
                 </li>
@@ -113,33 +117,9 @@
         </div>
 
         <hr>
-        Width : {{ containerSize.width }} Height : {{ containerSize.height }}
-    </div>
+        Width : {{ containerSize.width }}px - Height : {{ containerSize.height }}px
+    </section>
 </template>
 
 <style scoped>
-    .container {
-        width: 50vw;
-        margin: auto;
-    }
-
-    h1 {
-        margin: 16px 0;
-    }
-
-    ul {
-        padding: 0;
-    }
-
-    li {
-        list-style-type: none;
-    }
-
-    .toggleState {
-        margin: 16px 0px;
-    }
-
-    .mb-16 {
-        margin-bottom: 16px;
-    }
 </style>
