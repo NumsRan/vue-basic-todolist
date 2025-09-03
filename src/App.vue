@@ -20,18 +20,15 @@
 
     // TODO APP FUNCTION
     const createTask = () => {
-        if(taskName.value.trim().length === 0) {
-            console.log('espace')
-        }
-        else {
+        if(taskName.value.trim().length > 0) {
             todoList.value.push({
                 id: id++,
                 title: taskName.value,
                 completed: false,
                 date: Date.now()
             })
+
         }
-        
         taskName.value = ''
     }
 
