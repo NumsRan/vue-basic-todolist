@@ -2,8 +2,14 @@
     import { useTimer } from '@/composable/useTimer'
 
     const props = defineProps({
-        isStarted: Boolean,
-        isCompleted: Boolean
+        isStarted: {
+            type: Boolean,
+            required: true
+        },
+        isCompleted: {
+            type: Boolean,
+            required: true
+        }
     })
 
     const { time } = useTimer(props)

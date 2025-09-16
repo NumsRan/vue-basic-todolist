@@ -1,6 +1,9 @@
 <script setup>
     defineProps({
-        btnClass: String
+        btnClass: {
+            type: String,
+            required: true
+        }
     })
 
     const emits = defineEmits(['delete'])

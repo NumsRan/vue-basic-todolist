@@ -4,10 +4,22 @@
     import { ref } from 'vue'
 
     defineProps({
-        todoTitle: String,
-        isCompleted: Boolean,
-        checkboxId: String,
-        isTodoItem: Boolean
+        todoTitle: {
+            type: String,
+            required: true
+        },
+        isCompleted: {
+            type: Boolean,
+            required: false
+        },
+        checkboxId: {
+            type: String,
+            required: true
+        },
+        isTodoItem: {
+            type: Boolean,
+            required: true
+        }
     })
 
     const startTimer = ref(false)
