@@ -48,11 +48,9 @@
     
         <form class="d-flex my-2" @submit.prevent="createTask">
             <input type="text" placeholder="New task to do" class="form-control me-3" v-model="taskName" required>
-            <Button 
-                class="btn btn-primary"
-                btnClass="bi bi-plus-square" 
-                :disabled="taskName.length === 0"
-            />
+            <Button class="btn btn-primary" :disabled="taskName.length === 0">
+                <i class="bi bi-plus-square"></i>
+            </Button>
         </form>
     
         <div>
@@ -86,11 +84,9 @@
                         :isCompleted="todo.completed"
                         v-model="todo.completed"
                     />
-                    <Button
-                        class="btn btn-danger btn-sm ms-auto"
-                        btnClass="bi bi-trash-fill"
-                        @delete="removeTask(todo.id)"
-                    />
+                    <Button class="btn btn-danger btn-sm ms-auto" @delete="removeTask(todo.id)">
+                        <i class="bi bi-trash-fill"></i>
+                    </Button>
                 </li>
             </ul>
         </div>
