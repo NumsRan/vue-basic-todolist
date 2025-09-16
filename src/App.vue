@@ -1,5 +1,5 @@
 <script setup>
-    import { computed, ref, onMounted, onUnmounted } from 'vue'
+    import { computed, ref } from 'vue'
 
     import Checkbox from './components/Checkbox.vue'
     import Button from './components/Button.vue'
@@ -11,12 +11,6 @@
     const todoList = ref([])
 
     const hideCompleted = ref(false)
-
-    const container = ref(null)
-
-    const containerSize = ref({width: 0, height: 0})
-
-    let getRect
 
     // TODO APP FUNCTION
     const createTask = () => {
@@ -46,18 +40,6 @@
     const todoTaskCount = computed(() => {
         return todoList.value.filter((todo) => todo.completed === false).length
     })
-
-    onMounted(() => {
-        getRect = setInterval(() => {
-            const Rect = container.value.getBoundingClientRect()
-            containerSize.value = {width: Math.round(Rect.width), height: Math.round(Rect.height)}
-        }, 0)
-    })
-
-    onUnmounted(() => {
-        clearInterval(getRect)
-    })
-
 </script>
 
 <template>
@@ -114,7 +96,6 @@
         </div>
 
         <hr>
-        Width : {{ containerSize.width }}px - Height : {{ containerSize.height }}px
     </section>
 </template>
 
